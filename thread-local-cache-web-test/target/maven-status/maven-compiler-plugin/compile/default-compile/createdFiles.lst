@@ -1,6 +1,0 @@
-com/yi/thread/local/cache/web/test/service/TestService$Supplier.class
-com/yi/thread/local/cache/web/test/ThreadLocalCacheApplication.class
-com/yi/thread/local/cache/web/test/config/WebConfigurer.class
-com/yi/thread/local/cache/web/test/service/TestService.class
-com/yi/thread/local/cache/web/test/interceptor/ThreadLocalCacheInterceptor.class
-com/yi/thread/local/cache/web/test/controller/TestController.class
