@@ -45,14 +45,8 @@ public class ThreadLocalCacheAspect {
         // distinct
         id = ((List)id).stream().distinct().collect(Collectors.toList());
         List unCachedKeys = (List) ((List)id).stream()
-                .peek(e -> {
-                    try {
-                        GsonUtils.toObj(GsonUtils.toJSONString(e), markType.getArgumentType());
-                    } catch (Exception ex) {
-                        throw new IllegalStateException("the argument is of wrong type");
-                    }
-                })
-                .filter(e -> !ThreadLocalCacheManager.containsCacheKey(markType, e)).distinct()
+                .peek(e -> validateIdType(markType, e))
+                .filter(e -> !ThreadLocalCacheManager.containsCacheKey(markType, e))
                 .collect(Collectors.toList());
 
         Object object = null;
@@ -74,6 +68,14 @@ public class ThreadLocalCacheAspect {
         appendAndIndexQueriedValues(markType, (ThreadLocalCacheable) proxy, object, results);
 
         return results;
+    }
+
+    private void validateIdType(ThreadLocalCacheManager.MarkType markType, Object e) {
+        try {
+            GsonUtils.toObj(GsonUtils.toJSONString(e), markType.getArgumentType());
+        } catch (Exception ex) {
+            throw new IllegalStateException("the argument is of wrong type");
+        }
     }
 
     private ThreadLocalCacheManager.MarkType getThreadLocalCacheMarkType(ProceedingJoinPoint pjp) {
@@ -106,6 +108,9 @@ public class ThreadLocalCacheAspect {
 
     private Type fetchResultClass(ProceedingJoinPoint pjp) {
         Method method = ((MethodSignature)pjp.getSignature()).getMethod();
+        if (!(method.getGenericReturnType() instanceof ParameterizedType)) {
+            return Object.class;
+        }
         return ((ParameterizedType)method.getGenericReturnType()).getActualTypeArguments()[0];
     }
 
