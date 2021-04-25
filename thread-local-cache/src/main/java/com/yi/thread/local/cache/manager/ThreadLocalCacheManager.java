@@ -7,7 +7,7 @@ import java.util.Objects;
 
 public class ThreadLocalCacheManager {
 
-    private static final ThreadLocal<Map<MarkType, Map<String, String>>> THREAD_LOCAL = new ThreadLocal<>();
+    private static final ThreadLocal<Map<MarkType, Map<Object, String>>> THREAD_LOCAL = new ThreadLocal<>();
 
     public static void refresh() {
         THREAD_LOCAL.remove();
@@ -23,24 +23,24 @@ public class ThreadLocalCacheManager {
     }
 
     private static MarkType initMarkType(MarkType markType) {
-        Map<MarkType, Map<String, String>> markTypeMapMap = THREAD_LOCAL.get();
+        Map<MarkType, Map<Object, String>> markTypeMapMap = THREAD_LOCAL.get();
         markTypeMapMap.computeIfAbsent(markType, (mt) -> new HashMap<>());
         return markType;
     }
 
-    public static boolean containsCacheKey(MarkType markType, String cacheKey) {
+    public static boolean containsCacheKey(MarkType markType, Object cacheKey) {
         return THREAD_LOCAL.get().containsKey(markType) &&
                 THREAD_LOCAL.get().get(markType).containsKey(cacheKey);
     }
 
-    public static String getCacheValue(MarkType markType, String cacheKey) {
+    public static String getCacheValue(MarkType markType, Object cacheKey) {
         if (!THREAD_LOCAL.get().containsKey(markType)) {
             initMarkType(markType);
         }
         return THREAD_LOCAL.get().get(markType).get(cacheKey);
     }
 
-    public static void addCacheEntry(MarkType markType, String cacheKey, String cacheValue) {
+    public static void addCacheEntry(MarkType markType, Object cacheKey, String cacheValue) {
         if (!THREAD_LOCAL.get().containsKey(markType)) {
             initMarkType(markType);
         }

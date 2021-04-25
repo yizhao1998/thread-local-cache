@@ -45,7 +45,14 @@ public class ThreadLocalCacheAspect {
         // distinct
         id = ((List)id).stream().distinct().collect(Collectors.toList());
         List unCachedKeys = (List) ((List)id).stream()
-                .filter(e -> !ThreadLocalCacheManager.containsCacheKey(markType, GsonUtils.toJSONString(e))).distinct()
+                .peek(e -> {
+                    try {
+                        GsonUtils.toObj(GsonUtils.toJSONString(e), markType.getArgumentType());
+                    } catch (Exception ex) {
+                        throw new IllegalStateException("the argument is of wrong type");
+                    }
+                })
+                .filter(e -> !ThreadLocalCacheManager.containsCacheKey(markType, e)).distinct()
                 .collect(Collectors.toList());
 
         Object object = null;
@@ -83,7 +90,7 @@ public class ThreadLocalCacheAspect {
             results.addAll(((List) object));
             ((List) object).forEach(r -> {
                 Object key = proxy.resolveKey(r);
-                ThreadLocalCacheManager.addCacheEntry(markType, GsonUtils.toJSONString(key), GsonUtils.toJSONString(r));
+                ThreadLocalCacheManager.addCacheEntry(markType, key, GsonUtils.toJSONString(r));
             });
         }
     }
@@ -91,9 +98,8 @@ public class ThreadLocalCacheAspect {
     @SuppressWarnings({"unchecked", "rawtypes"})
     private void appendCachedValues(Type resultType, ThreadLocalCacheManager.MarkType markType, List id, List results) {
         for (Object key : id) {
-            String cacheKey = GsonUtils.toJSONString(key);
-            if (ThreadLocalCacheManager.containsCacheKey(markType, cacheKey)) {
-                results.add(GsonUtils.toObj(ThreadLocalCacheManager.getCacheValue(markType, cacheKey), resultType));
+            if (ThreadLocalCacheManager.containsCacheKey(markType, key)) {
+                results.add(GsonUtils.toObj(ThreadLocalCacheManager.getCacheValue(markType, key), resultType));
             }
         }
     }
