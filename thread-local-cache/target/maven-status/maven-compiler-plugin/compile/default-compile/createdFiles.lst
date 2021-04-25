@@ -1,0 +1,5 @@
+com/yi/thread/local/cache/util/GsonUtils.class
+com/yi/thread/local/cache/core/ThreadLocalCacheAspect.class
+com/yi/thread/local/cache/core/ThreadLocalCacheable.class
+com/yi/thread/local/cache/manager/ThreadLocalCacheManager$MarkType.class
+com/yi/thread/local/cache/manager/ThreadLocalCacheManager.class

@@ -1,0 +1,5 @@
+/Users/yi/IdeaProjects/thread-local-cache-all/thread-local-cache-web-test/src/main/java/com/yi/thread/local/cache/web/test/config/WebConfigurer.java
+/Users/yi/IdeaProjects/thread-local-cache-all/thread-local-cache-web-test/src/main/java/com/yi/thread/local/cache/web/test/service/TestService.java
+/Users/yi/IdeaProjects/thread-local-cache-all/thread-local-cache-web-test/src/main/java/com/yi/thread/local/cache/web/test/interceptor/ThreadLocalCacheInterceptor.java
+/Users/yi/IdeaProjects/thread-local-cache-all/thread-local-cache-web-test/src/main/java/com/yi/thread/local/cache/web/test/controller/TestController.java
+/Users/yi/IdeaProjects/thread-local-cache-all/thread-local-cache-web-test/src/main/java/com/yi/thread/local/cache/web/test/ThreadLocalCacheApplication.java
