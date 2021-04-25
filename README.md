@@ -7,7 +7,25 @@ Technical Details:
 2. TLC compares cache key by calling hashCode(), so make sure ID overrides hashCode() when ID is not a primitive type.
 3. TLC clears thread local variable by intercepting servlet request, see: com.yi.thread.local.cache.interceptor.ThreadLocalCacheInterceptor
 
-Usage Example:
+Usage: (Register com.yi.thread.local.cache.interceptor.ThreadLocalCacheInterceptor)
+```
+@Configuration
+public class WebConfigurer implements WebMvcConfigurer {
+
+    @Bean
+    public HandlerInterceptor threadLocalCacheInterceptor() {
+        return new ThreadLocalCacheInterceptor();
+    }
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(threadLocalCacheInterceptor());
+    }
+}
+```
+
+
+Test Example:
 ```
 @Service
 public class TestService implements ThreadLocalCacheable<Integer, TestService.Supplier<Integer>> {
@@ -31,9 +49,7 @@ public class TestService implements ThreadLocalCacheable<Integer, TestService.Su
 
     ...
 }
-```
-Test Example:
-```
+
 @RestController
 public class TestController {
 
@@ -56,7 +72,11 @@ public class TestController {
     }
 }
 ```
-Output
+Request:
+```
+curl --location --request GET 'http://localhost:8080/hello'
+```
+Console output:
 ```
 find key for [1,2]
 resolve key{"supId":1,"status":"NORMAL"}
