@@ -21,7 +21,7 @@ public class TestService implements ThreadLocalCacheable<Integer, TestService.Su
     public List<Supplier<Integer>> cacheableGet(List<Integer> strings) {
         System.out.println("find key for " + GsonUtils.toJSONString(strings));
         if (strings.contains(4)) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("test illegal access");
         }
         return strings.stream().map(integer -> new Supplier<>(integer, "NORMAL")).collect(Collectors.toList());
     }
